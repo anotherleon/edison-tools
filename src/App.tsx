@@ -1,26 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import http from "./http";
+import "./App.css";
+var QRCode = require("qrcode.react");
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+    state = {
+        ip: "",
+    };
+    componentDidMount() {
+        http({ url: "http://localhost:3000/ip" }).then((res: any) => {
+            this.setState({
+                ip: res.data,
+            });
+        });
+    }
+
+    render() {
+        const { ip } = this.state;
+        return (
+            <div className="App">
+                <header className="App-header">
+                    <QRCode size={300} value={`http://${ip}:3000/`} />
+                </header>
+            </div>
+        );
+    }
 }
 
 export default App;
